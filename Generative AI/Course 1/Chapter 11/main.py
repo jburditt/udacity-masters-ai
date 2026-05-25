@@ -53,3 +53,7 @@ for epoch in range(num_epochs):
         optimizer.step()
         epoch_loss += loss.item()
     print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss/len(sum_dataloader):.4f}")
+    
+test_input = torch.tensor([3.0, 7.0])
+prediction = sum_model(test_input)
+print(f"Prediction for 3 + 7: {prediction.item():.1f}")
