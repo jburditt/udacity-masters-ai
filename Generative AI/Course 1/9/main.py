@@ -49,3 +49,75 @@ print(f"ROUGE-1 Score: {results['rouge1']:.4f}")
 print(f"ROUGE-L Score: {results['rougeL']:.4f}")
 
 #endregion
+
+#region SEMANTIC SIMILARITY
+# 1. Load a pretrained Sentence Transformer model
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# 2. Define prediction and label sentences
+labels = ["A dog is a loyal pet", "Cats are independent animals", "The sky is blue"]
+preds = [
+    "Dogs make great companions",
+    "A cat is a solitary creature",
+    "The ocean is vast",
+]
+
+# 3. Generate embeddings for each list
+pred_embeddings = model.encode(preds)
+label_embeddings = model.encode(labels)
+
+# 4. Calculate cosine similarity for each pair
+for i in range(len(preds)):
+    similarity = np.dot(pred_embeddings[i], label_embeddings[i]) / (
+        np.linalg.norm(pred_embeddings[i]) * np.linalg.norm(label_embeddings[i])
+    )
+    print(
+        f"Pair {i + 1}:\n  Pred:  '{preds[i]}'\n  Label: '{labels[i]}'\n  Similarity: {similarity:.4f}\n"
+    )
+    
+#endregion
+
+#region FUNCTIONAL CORRECTNESS
+
+# This function is supposed to reverse and capitalize a string,
+# but it has a bug: it fails if the string contains a number.
+def reverse_and_capitalize(s: str) -> str:
+    """Reverse and capitalize a string, with a hidden bug."""
+    if any(char.isdigit() for char in s):
+        return "ERROR - CONTAINS DIGITS"
+    return s[::-1].upper()
+
+# Test cases: one prediction will trigger the bug
+code_preds = ["hello", "world1", "python"]
+test_labels = ["OLLEH", "1DLROW", "NOHTYP"]
+
+# Run the generated code against the test labels
+results = []
+for pred_code, label in zip(code_preds, test_labels):
+    output = reverse_and_capitalize(pred_code)
+    print(f"Input: '{pred_code}' -> Output: '{output}', Expected: '{label}'")
+    results.append(output == label)
+
+pass_rate = sum(results) / len(results)
+print(f"\nProportion of tests passed: {pass_rate:.2f}")
+
+#endregion
+
+#region PASS@K
+
+def pass_at_k(samples: list[str], label: str) -> int:
+    """Return 1 if any sample in the list matches the label, else 0."""
+    return int(any(s == label for s in samples))
+
+# The model generated 4 possible answers for "Name a primary color."
+label = "blue"
+samples = ["red", "yellow", "green", "blue"]
+
+# Check if any of the 4 samples is correct
+pass_score = pass_at_k(samples, label)
+
+print(f"Samples: {samples}")
+print(f"Label: {label}")
+print(f"Pass@4 Score: {pass_score}")
+
+#endregion
