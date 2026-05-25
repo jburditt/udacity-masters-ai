@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 
 class NumberProductDataset(Dataset):
@@ -23,3 +24,16 @@ class NumberSumDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
+      
+class SumMLP(nn.Module):
+    def __init__(self):
+        super(SumMLP, self).__init__()
+        self.hidden_layer = nn.Linear(2, 128)
+        self.activation = nn.ReLU()
+        self.output_layer = nn.Linear(128, 1)
+
+    def forward(self, x):
+        x = self.hidden_layer(x)
+        x = self.activation(x)
+        x = self.output_layer(x)
+        return x

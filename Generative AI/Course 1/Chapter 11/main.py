@@ -36,8 +36,20 @@ for i, (input1, input2, output) in enumerate(dataloader):
     print(f"  Inputs 2: {input2}")
     print(f"  Outputs: {output}")
     
-# sum_dataset = NumberSumDataset(data_range=10)
-# sum_dataloader = DataLoader(sum_dataset, batch_size=10, shuffle=True)
-# sum_model = SumMLP()
-# loss_function = nn.MSELoss()
-# optimizer = Adam(sum_model.parameters(), lr=0.01)
+sum_dataset = util.NumberSumDataset(data_range=10)
+sum_dataloader = DataLoader(sum_dataset, batch_size=10, shuffle=True)
+sum_model = util.SumMLP()
+loss_function = nn.MSELoss()
+optimizer = Adam(sum_model.parameters(), lr=0.01)
+
+num_epochs = 20
+for epoch in range(num_epochs):
+    epoch_loss = 0.0
+    for inputs, targets in sum_dataloader:
+        optimizer.zero_grad()
+        predictions = sum_model(inputs)
+        loss = loss_function(predictions.squeeze(), targets)
+        loss.backward()
+        optimizer.step()
+        epoch_loss += loss.item()
+    print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss/len(sum_dataloader):.4f}")
