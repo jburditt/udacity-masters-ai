@@ -5,7 +5,8 @@ Udacity Masters in AI
 - Run `python -m venv .venv`
 - Run `.venv\Scripts\Activate`
 - Run `python -m pip install --upgrade pip`
-- Run `python -m pip install requests`
+- Run `python -m pip install requests` to install chapter 6 packages
+- Run `python -m pip install numpy evaluate sentence-transformers` to install chapter 9 packages
 
 ## Run
 - Run `python test.py`
