@@ -64,3 +64,21 @@ def train_one_epoch(model, loader, criterion, optimizer, device):
         n += batch_size
         
     return running_loss / n, running_acc / n
+
+# Function to evaluate the model on validation or test data
+@torch.no_grad()
+def evaluate(model, loader, criterion, device):
+    model.eval()  # Set model to evaluation mode
+    total_loss, total_acc, n = 0.0, 0.0, 0
+    for x, y in loader:
+        x, y = x.to(device), y.to(device)
+        logits = model(x)
+        loss = criterion(logits, y)
+        
+        # ... update stats ...
+        batch_size = x.size(0)
+        total_loss += loss.item() * batch_size
+        total_acc += accuracy_from_logits(logits, y) * batch_size
+        n += batch_size
+
+    return total_loss / n, total_acc / n
