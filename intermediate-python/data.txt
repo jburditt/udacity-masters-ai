@@ -1,0 +1,5 @@
+ban     10
+band    5
+bar     14
+can     32
+candy   7
